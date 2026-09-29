@@ -1,0 +1,480 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 13,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "description": "Base preset for DFU bootloader",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "HPM_BUILD_TYPE": "flash_xip",
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CUSTOM_TARGET_TRIPLET": "riscv-none-elf"
+            }
+        },
+        {
+            "name": "base-debug",
+            "hidden": true,
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "hpm5300evk-release",
+            "displayName": "HPM5300EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm5300evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5300evk-release"
+        },
+        {
+            "name": "hpm5321_usb2can-release",
+            "displayName": "HPM5321 USB2CAN (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm5321_usb2can"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5321_usb2can-release"
+        },
+        {
+            "name": "hscant-release",
+            "displayName": "HSCanT (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hscant"
+            },
+            "binaryDir": "${sourceDir}/build/hscant-release"
+        },
+        {
+            "name": "hpm5301evklite-release",
+            "displayName": "HPM5301EVKLite (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm5301evklite"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5301evklite-release"
+        },
+        {
+            "name": "hpm5e00evk-release",
+            "displayName": "HPM5E00EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm5e00evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5e00evk-release"
+        },
+        {
+            "name": "hpm6200evk-release",
+            "displayName": "HPM6200EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6200evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6200evk-release"
+        },
+        {
+            "name": "hpm6300evk-release",
+            "displayName": "HPM6300EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6300evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6300evk-release"
+        },
+        {
+            "name": "hpm6750evk2-release",
+            "displayName": "HPM6750EVK2 (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6750evk2"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6750evk2-release"
+        },
+        {
+            "name": "hpm6750evkmini-release",
+            "displayName": "HPM6750EVKMini (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6750evkmini"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6750evkmini-release"
+        },
+        {
+            "name": "hpm6800evk-release",
+            "displayName": "HPM6800EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6800evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6800evk-release"
+        },
+        {
+            "name": "hpm6e00evk-release",
+            "displayName": "HPM6E00EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6e00evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6e00evk-release"
+        },
+        {
+            "name": "hpm6e00_full_port-release",
+            "displayName": "HPM6E00 Full Port (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6e00_full_port"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6e00_full_port-release"
+        },
+        {
+            "name": "hpm6p00evk-release",
+            "displayName": "HPM6P00EVK (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6p00evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6p00evk-release"
+        },
+        {
+            "name": "hpm6p41dev-release",
+            "displayName": "HPM6P41DEV (Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hpm6p41dev"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6p41dev-release"
+        },
+        {
+            "name": "hslinklite-release",
+            "displayName": "HSLink Lite (HPM5301 Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hslinklite"
+            },
+            "binaryDir": "${sourceDir}/build/hslinklite-release"
+        },
+        {
+            "name": "hslinkpro-release",
+            "displayName": "HSLink Pro (HPM5301 Release)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hslinkpro"
+            },
+            "binaryDir": "${sourceDir}/build/hslinkpro-release"
+        },
+        {
+            "name": "hpm5300evk-debug",
+            "displayName": "HPM5300EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm5300evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5300evk-debug"
+        },
+        {
+            "name": "hpm5321_usb2can-debug",
+            "displayName": "HPM5321 USB2CAN (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm5321_usb2can"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5321_usb2can-debug"
+        },
+        {
+            "name": "hscant-debug",
+            "displayName": "HSCanT (Debug)",
+            "inherits": "base",
+            "cacheVariables": {
+                "BOARD": "hscant"
+            },
+            "binaryDir": "${sourceDir}/build/hscant-debug"
+        },
+        {
+            "name": "hpm5301evklite-debug",
+            "displayName": "HPM5301EVKLite (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm5301evklite"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5301evklite-debug"
+        },
+        {
+            "name": "hpm5e00evk-debug",
+            "displayName": "HPM5E00EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm5e00evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm5e00evk-debug"
+        },
+        {
+            "name": "hpm6200evk-debug",
+            "displayName": "HPM6200EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6200evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6200evk-debug"
+        },
+        {
+            "name": "hpm6300evk-debug",
+            "displayName": "HPM6300EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6300evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6300evk-debug"
+        },
+        {
+            "name": "hpm6750evk2-debug",
+            "displayName": "HPM6750EVK2 (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6750evk2"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6750evk2-debug"
+        },
+        {
+            "name": "hpm6750evkmini-debug",
+            "displayName": "HPM6750EVKMini (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6750evkmini"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6750evkmini-debug"
+        },
+        {
+            "name": "hpm6800evk-debug",
+            "displayName": "HPM6800EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6800evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6800evk-debug"
+        },
+        {
+            "name": "hpm6e00evk-debug",
+            "displayName": "HPM6E00EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6e00evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6e00evk-debug"
+        },
+        {
+            "name": "hpm6e00_full_port-debug",
+            "displayName": "HPM6E00 Full Port (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6e00_full_port"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6e00_full_port-debug"
+        },
+        {
+            "name": "hpm6p00evk-debug",
+            "displayName": "HPM6P00EVK (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6p00evk"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6p00evk-debug"
+        },
+        {
+            "name": "hpm6p41dev-debug",
+            "displayName": "HPM6P41DEV (Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hpm6p41dev"
+            },
+            "binaryDir": "${sourceDir}/build/hpm6p41dev-debug"
+        },
+        {
+            "name": "hslinklite-debug",
+            "displayName": "HSLink Lite (HPM5301 Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hslinklite"
+            },
+            "binaryDir": "${sourceDir}/build/hslinklite-debug"
+        },
+        {
+            "name": "hslinkpro-debug",
+            "displayName": "HSLink Pro (HPM5301 Debug)",
+            "inherits": "base-debug",
+            "cacheVariables": {
+                "BOARD": "hslinkpro"
+            },
+            "binaryDir": "${sourceDir}/build/hslinkpro-debug"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "hpm5300evk-release",
+            "configurePreset": "hpm5300evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5321_usb2can-release",
+            "configurePreset": "hpm5321_usb2can-release",
+            "jobs": 8
+        },
+        {
+            "name": "hscant-release",
+            "configurePreset": "hscant-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5301evklite-release",
+            "configurePreset": "hpm5301evklite-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5e00evk-release",
+            "configurePreset": "hpm5e00evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6200evk-release",
+            "configurePreset": "hpm6200evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6300evk-release",
+            "configurePreset": "hpm6300evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6750evk2-release",
+            "configurePreset": "hpm6750evk2-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6750evkmini-release",
+            "configurePreset": "hpm6750evkmini-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6800evk-release",
+            "configurePreset": "hpm6800evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6e00evk-release",
+            "configurePreset": "hpm6e00evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6e00_full_port-release",
+            "configurePreset": "hpm6e00_full_port-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6p00evk-release",
+            "configurePreset": "hpm6p00evk-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6p41dev-release",
+            "configurePreset": "hpm6p41dev-release",
+            "jobs": 8
+        },
+        {
+            "name": "hslinklite-release",
+            "configurePreset": "hslinklite-release",
+            "jobs": 8
+        },
+        {
+            "name": "hslinkpro-release",
+            "configurePreset": "hslinkpro-release",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5300evk-debug",
+            "configurePreset": "hpm5300evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5321_usb2can-debug",
+            "configurePreset": "hpm5321_usb2can-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hscant-debug",
+            "configurePreset": "hscant-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5301evklite-debug",
+            "configurePreset": "hpm5301evklite-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm5e00evk-debug",
+            "configurePreset": "hpm5e00evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6200evk-debug",
+            "configurePreset": "hpm6200evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6300evk-debug",
+            "configurePreset": "hpm6300evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6750evk2-debug",
+            "configurePreset": "hpm6750evk2-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6750evkmini-debug",
+            "configurePreset": "hpm6750evkmini-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6800evk-debug",
+            "configurePreset": "hpm6800evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6e00evk-debug",
+            "configurePreset": "hpm6e00evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6e00_full_port-debug",
+            "configurePreset": "hpm6e00_full_port-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6p00evk-debug",
+            "configurePreset": "hpm6p00evk-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hpm6p41dev-debug",
+            "configurePreset": "hpm6p41dev-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hslinklite-debug",
+            "configurePreset": "hslinklite-debug",
+            "jobs": 8
+        },
+        {
+            "name": "hslinkpro-debug",
+            "configurePreset": "hslinkpro-debug",
+            "jobs": 8
+        }
+    ]
+}

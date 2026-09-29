@@ -1,0 +1,45 @@
+/*
+ * CherryUSB Configuration for ECAT-CANFD Bootloader
+ * Matches CDC demo pattern + HS support
+ */
+#ifndef USB_CONFIG_H
+#define USB_CONFIG_H
+
+#include "board.h"
+#include "boot_log.h"
+
+#define CONFIG_USB_PRINTF(...) BOOT_PRINTF(__VA_ARGS__)
+#define CONFIG_USB_DBG_LEVEL USB_DBG_INFO
+
+#if defined(CONFIG_USB_DEVICE_FS) || defined(CONFIG_USB_DEVICE_FORCE_FULL_SPEED)
+#undef CONFIG_USB_HS
+#else
+#define CONFIG_USB_HS
+#endif
+
+#define CONFIG_USB_ALIGN_SIZE 4
+#define USB_NOCACHE_RAM_SECTION __attribute__((section(".noncacheable")))
+
+#define USBD_VID           0x34B7
+#define USBD_PID           0x0003
+#define USBD_MAX_POWER     100
+
+#define CONFIG_USBDEV_REQUEST_BUFFER_LEN 4096
+#define CONFIG_USBDEV_ADVANCE_DESC
+#define CONFIG_USBDEV_MAX_BUS 1
+
+#define CONFIG_USB_DEVICE 1
+#define CONFIG_USB_DEVICE_DFU 1
+
+#define CONFIG_USBHOST_MAX_RHPORTS 1
+#define CONFIG_USBHOST_MAX_EXTHUBS 1
+#define CONFIG_USBHOST_MAX_EHPORTS 4
+#define CONFIG_USBHOST_MAX_INTERFACES 4
+#define CONFIG_USBHOST_MAX_INTF_ALTSETTINGS 1
+#define CONFIG_USBHOST_MAX_ENDPOINTS 4
+#define CONFIG_USBHOST_DEV_NAMELEN 16
+
+#define CONFIG_HPM_USBD_BASE HPM_USB0_BASE
+#define CONFIG_HPM_USBD_IRQn IRQn_USB0
+
+#endif
