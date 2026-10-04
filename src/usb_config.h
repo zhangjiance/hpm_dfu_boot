@@ -21,7 +21,7 @@
 #define USB_NOCACHE_RAM_SECTION __attribute__((section(".noncacheable")))
 
 #define USBD_VID           0x34B7
-#define USBD_PID           0x0003
+#define USBD_PID           0x7B43
 #define USBD_MAX_POWER     100
 
 #define CONFIG_USBDEV_REQUEST_BUFFER_LEN 4096
