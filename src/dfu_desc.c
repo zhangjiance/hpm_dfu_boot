@@ -8,6 +8,7 @@
 #include "boot_log.h"
 #include "board.h"
 #include "usb_config.h"
+#include "hpm_romapi.h"
 #include <stdio.h>
 
 /* DFU functional descriptor is 9 bytes */
@@ -15,6 +16,40 @@
 #define USB_CONFIG_SIZE    (9 + DFU_DESC_TOTAL_LEN)
 
 static char flash_internal_desc_str[128];
+
+/*
+ * USB iSerialNumber, filled by serial_str_build().
+ *
+ * It MUST be unique per device instance: Windows keys the instance id on
+ * USB\VID_34B7&PID_0003\<serial> and will not enumerate a second board whose
+ * serial collides, so a hardcoded string breaks as soon as two boards are
+ * attached at the same time (and makes `dfu-util -S <serial>` useless).
+ *
+ * Derived from the top 96 bits of the chip UUID in the OTP shadow
+ * (OTP_SOC_UUID_IDX = 88) via the boot ROM API -- the same call the SDK's
+ * TinyUSB BSP uses in board_get_unique_id().  Words 88..90 match what the
+ * application uses, so one board reports the same serial in both modes.
+ */
+#define OTP_UUID_WORD_IDX (88U) /* hpm_soc_feature.h: OTP_SOC_UUID_IDX */
+
+static char serial_str[25];
+
+static void serial_str_build(void)
+{
+    static const char hex[] = "0123456789ABCDEF";
+    uint32_t i;
+
+    for (i = 0U; i < 3U; i++) {
+        const uint32_t word =
+            ROM_API_TABLE_ROOT->otp_driver_if->read_from_shadow(OTP_UUID_WORD_IDX + i);
+        uint32_t n;
+
+        for (n = 0U; n < 8U; n++) {
+            serial_str[8U * i + n] = hex[(word >> (28U - 4U * n)) & 0xFU];
+        }
+    }
+    serial_str[24] = '\0';
+}
 
 /* ========== Device Descriptor ========== */
 static const uint8_t device_descriptor[] = {
@@ -42,7 +77,7 @@ static const char *string_descriptors[] = {
     (const char[]){ 0x09, 0x04 },
     "HPMicro",
     "HPMicro Dfu",
-    "2026092600",
+    serial_str,               /* filled by serial_str_build() */
     flash_internal_desc_str,  /* filled by dfu_boot_init */
 };
 static const uint8_t *device_descriptor_cb(uint8_t speed)
@@ -266,6 +301,9 @@ void dfu_boot_init(uint8_t busid, uintptr_t reg_base)
                    (unsigned long)USBD_DFU_APP_DEFAULT_ADD,
                    (unsigned long)(dfu_app_size / (16 * 1024)),
                    (unsigned long)(16));
+
+    /* Chip UUID -> USB iSerialNumber (must be unique per board) */
+    serial_str_build();
 
     /* Assemble the WCID extended properties (DeviceInterfaceGUIDs) */
     msos_ext_prop_build();
