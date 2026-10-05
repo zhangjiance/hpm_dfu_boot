@@ -14,8 +14,9 @@ extern "C" {
 /* Check + clear DFU trigger from retention register */
 bool hpm_dfu_check_and_clear_trigger(void);
 
-/* Write trigger magic and reset — call from APP */
-void hpm_dfu_reboot_to_dfu(void) __attribute__((noreturn));
+/* Write trigger magic and re-enter the DFU bootloader via the ROM
+ * run_bootloader API (primary image) — call from APP; never returns. */
+void hpm_reboot_to_boot(void) __attribute__((noreturn));
 
 /* Jump to APP (skips 4-byte DFU signature) — never returns */
 void hpm_dfu_jump_to_app(void) __attribute__((noreturn));

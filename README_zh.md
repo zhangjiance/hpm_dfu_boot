@@ -15,7 +15,7 @@
 上电 / 复位后，`main()` 会依次检查以下条件（`hpm_dfu_trigger.c`）：
 
 1. **Boot 引脚**：若配置了该引脚且处于激活电平，则停留在 bootloader（同时清除可能存在的旧 DFU 触发标记，确保下次复位能正常启动 APP）。
-2. **保留寄存器触发（BGPR / PDGO）**：应用程序可通过写入保留寄存器并触发软件复位，请求下次启动进入 DFU 模式（`hpm_dfu_reboot_to_dfu()`）。
+2. **保留寄存器触发（BGPR / PDGO）**：应用程序可通过写入保留寄存器，并调用 ROM 的 `run_bootloader` API（`API_BOOT_SRC_PRIMARY`，即回到位于 `0x80000000` 的 DFU bootloader）重新进入引导流程，请求进入 DFU 模式（`hpm_reboot_to_boot()`）。相比整片软件复位，该方式直接走 ROM 引导流程；仅当 `run_bootloader` 意外返回时才回退为软件复位。
 3. **APP 有效性**：检查 APP 起始地址（`USBD_DFU_APP_DEFAULT_ADD = 0x80020000`）处的 4 字节 DFU 签名（`BOARD_DFU_SIGNATURE`）。若签名有效，则关闭中断、失效缓存并跳转到应用程序。
 
 如果以上均未满足（无有效 APP 或显式请求），bootloader 初始化 USB0 并进入 **DFU 模式**，等待主机通过 DFU 工具（如 `dfu-util`、DfuSe 工具）下载固件。
@@ -76,5 +76,5 @@ cmake --build --preset hpm5301evklite-release
 ## 典型使用场景
 
 1. 首次烧录：通过调试器 / 烧录器将 `hpm-dfu-boot.hex` 写入 Flash 起始位置。
-2. 后续升级：设备上电时按住 Boot 引脚（或 APP 调用 `hpm_dfu_reboot_to_dfu()`），进入 DFU 模式后用 DFU 工具下载新的 APP 固件。
+2. 后续升级：设备上电时按住 Boot 引脚（或 APP 调用 `hpm_reboot_to_boot()`），进入 DFU 模式后用 DFU 工具下载新的 APP 固件。
 3. APP 启动：若 Flash 中已存在带有效签名的 APP 且未触发 DFU，bootloader 会自动跳转执行。

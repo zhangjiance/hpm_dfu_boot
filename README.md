@@ -15,7 +15,7 @@ This project is a second-stage bootloader resident in the first 128K of on-chip 
 After power-on / reset, `main()` checks the following conditions in order (see `hpm_dfu_trigger.c`):
 
 1. **Boot pin**: If a boot pin is configured and active, the device stays in the bootloader (and clears any stale DFU trigger so the next reset boots the APP normally).
-2. **Retention-register trigger (BGPR / PDGO)**: An application can request DFU mode on the next boot by writing a magic value to a retention register and issuing a software reset (`hpm_dfu_reboot_to_dfu()`).
+2. **Retention-register trigger (BGPR / PDGO)**: An application can request DFU mode on the next boot by writing a magic value to a retention register and re-entering the ROM boot flow via the `run_bootloader` API (`API_BOOT_SRC_PRIMARY`, back to the DFU bootloader at `0x80000000`) instead of a full software reset (`hpm_reboot_to_boot()`). A software reset is kept only as a fallback if `run_bootloader` unexpectedly returns.
 3. **APP validity**: Checks the 4-byte DFU signature (`BOARD_DFU_SIGNATURE`) at the APP start address (`USBD_DFU_APP_DEFAULT_ADD = 0x80020000`). If valid, it disables interrupts, invalidates the cache, and jumps to the application.
 
 If none of the above is satisfied (no valid APP or an explicit DFU request), the bootloader initializes USB0 and enters **DFU mode**, waiting for a host DFU tool (e.g. `dfu-util`, DfuSe tools) to download firmware.
@@ -76,5 +76,5 @@ Artifacts are located at `build/<preset>/output/hpm-dfu-boot.elf` and `hpm-dfu-b
 ## Typical Usage
 
 1. **First flash**: Write `hpm-dfu-boot.hex` to the start of Flash using a debugger / flasher.
-2. **Subsequent upgrades**: Hold the boot pin at power-on (or have the APP call `hpm_dfu_reboot_to_dfu()`) to enter DFU mode, then download new APP firmware with a DFU tool.
+2. **Subsequent upgrades**: Hold the boot pin at power-on (or have the APP call `hpm_reboot_to_boot()`) to enter DFU mode, then download new APP firmware with a DFU tool.
 3. **APP launch**: If a valid signed APP exists in Flash and no DFU trigger is set, the bootloader automatically jumps to it.
