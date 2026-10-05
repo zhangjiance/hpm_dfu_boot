@@ -5,6 +5,7 @@
  */
 
 #include "board.h"
+#include "clock.h"
 #include "hpm_clock_drv.h"
 #include "hpm_gpio_drv.h"
 #include "hpm_gptmr_drv.h"
@@ -196,14 +197,7 @@ void board_init_clock(void) {
     }
 
     /* group0[0] */
-    clock_add_to_group(clock_cpu0, 0);
-    clock_add_to_group(clock_ahb, 0);
-    clock_add_to_group(clock_lmm0, 0);
-    clock_add_to_group(clock_mchtmr0, 0);
-    clock_add_to_group(clock_rom, 0);
-    clock_add_to_group(clock_gpio, 0);
-    clock_add_to_group(clock_hdma, 0);
-    clock_add_to_group(clock_xpi0, 0);
+    init_board_clock();
     
     /* Connect Group0 to CPU0 */
     clock_connect_group_to_cpu(0, 0);
@@ -213,17 +207,10 @@ void board_init_clock(void) {
 
     /* Configure CPU to 480MHz, AXI/AHB to 160MHz */
     sysctl_config_cpu0_domain_clock(HPM_SYSCTL, clock_source_pll0_clk0, 2, 3);
-    /* Configure PLL0 Post Divider */
-    pllctlv2_set_postdiv(HPM_PLLCTLV2, pllctlv2_pll0, pllctlv2_clk0, pllctlv2_div_1p0);    /* PLL0CLK0: 960MHz */
-    pllctlv2_set_postdiv(HPM_PLLCTLV2, pllctlv2_pll0, pllctlv2_clk1, pllctlv2_div_1p6);    /* PLL0CLK1: 600MHz */
-    pllctlv2_set_postdiv(HPM_PLLCTLV2, pllctlv2_pll0, pllctlv2_clk2, pllctlv2_div_2p4);    /* PLL0CLK2: 400MHz */
-    /* Configure PLL0 Frequency to 960MHz */
-    pllctlv2_init_pll_with_freq(HPM_PLLCTLV2, pllctlv2_pll0, 960000000);
+    /* PLL0 / PLL1 and every clock source/divider */
+    init_board_clock_source();
 
     clock_update_core_clock();
-
-    /* Configure mchtmr to 24MHz */
-    clock_set_source_divider(clock_mchtmr0, clk_src_osc24m, 1);
 }
 
 void board_delay_us(uint32_t us) { clock_cpu_delay_us(us); }
@@ -303,6 +290,17 @@ void board_timer_process(void) {
 void board_led_toggle(void) {
   gpio_toggle_pin(BOARD_LED_GPIO_CTRL, BOARD_LED_GPIO_INDEX,
                   BOARD_LED_GPIO_PIN);
+}
+
+void board_can_set_termination(uint8_t channel, uint8_t on) {
+  static const uint8_t res_pin[4] = { 15U, 14U, 12U, 11U };
+
+  if (channel >= 4U) {
+    return;
+  }
+
+  gpio_write_pin(HPM_FGPIO, GPIO_DO_GPIOB, res_pin[channel],
+                 (on != 0U) ? 1U : 0U);
 }
 
 void board_init_uart(UART_Type *ptr) {

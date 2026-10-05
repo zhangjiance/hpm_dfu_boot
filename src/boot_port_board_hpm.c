@@ -33,7 +33,7 @@ void boot_port_board_init(void)
     extern void board_init_led_pins(void) __attribute__((weak));
     if (board_init_led_pins) {
         board_init_led_pins();
-        board_led_write(1);
+        board_led_write(BOARD_LED_ON_LEVEL);
     }
 #endif
 

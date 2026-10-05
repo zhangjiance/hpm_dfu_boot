@@ -25,6 +25,20 @@
 #define BOARD_DFU_SIGNATURE (0x48504D21UL)  /* "HPM!" */
 #define BOARD_BGPR          HPM_BGPR0
 
+/* ------------------------------------------------------------------
+ * Interface required by the candleLight port layer (port/board_contract.h)
+ * ------------------------------------------------------------------ */
+#define BOARD_CAN_COUNT     4
+#define BOARD_CAN_INSTANCES HPM_MCAN0, HPM_MCAN1, HPM_MCAN2, HPM_MCAN3
+#define BOARD_CAN_CLOCKS    clock_can0, clock_can1, clock_can2, clock_can3
+#define BOARD_USB_BASE      HPM_USB0
+#define BOARD_USB_IRQn      IRQn_USB0
+#define BOARD_HAS_SYS_LED   1 /* GPIOB[10], active high */
+
+/* clock.c already sets clk_can0..3 to clk_src_pll1_clk0 / 10 and adds them to
+ * group 0, so the port layer's generic board_init_can_clock() default applies
+ * (no board specific clock code needed). */
+
 /* dma section */
 #define BOARD_APP_HDMA HPM_HDMA
 #define BOARD_APP_HDMA_IRQ IRQn_HDMA
@@ -96,7 +110,7 @@
 /* User button */
 #define BOARD_APP_GPIO_CTRL HPM_FGPIO
 #define BOARD_APP_GPIO_INDEX GPIO_DI_GPIOA
-#define BOARD_APP_GPIO_PIN 3
+#define BOARD_APP_GPIO_PIN 2
 #define BOARD_APP_GPIO_IRQ IRQn_GPIO0_A
 #define BOARD_BUTTON_PRESSED_VALUE 1
 
@@ -158,6 +172,7 @@ void board_init_led_pins(void);
 void board_init_usb(USB_Type *ptr);
 void board_led_write(uint8_t state);
 void board_led_toggle(void);
+void board_can_set_termination(uint8_t channel, uint8_t on);
 void board_init_console(void);
 void board_init_uart(UART_Type *ptr);
 uint32_t board_init_spi_clock(SPI_Type *ptr);
