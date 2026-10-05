@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 board:
-    soc: HPM5321
+    soc: HPM5361
     device: HPM5321xEGx
     openocd-soc: hpm5300
     openocd-probe: cmsis_dap
