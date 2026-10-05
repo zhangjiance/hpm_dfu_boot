@@ -300,19 +300,10 @@ void board_timer_process(void) {
 }
 
 void board_led_toggle(void) {
-  gpio_toggle_pin(BOARD_LED_GPIO_CTRL, BOARD_LED_GPIO_INDEX,
-                  BOARD_LED_GPIO_PIN);
-}
-
-void board_can_set_termination(uint8_t channel, uint8_t on) {
-  static const uint8_t res_pin[4] = { 15U, 14U, 12U, 11U };
-
-  if (channel >= 4U) {
-    return;
-  }
-
-  gpio_write_pin(HPM_FGPIO, GPIO_DO_GPIOB, res_pin[channel],
-                 (on != 0U) ? 1U : 0U);
+  gpio_toggle_pin(BOARD_LED0_GPIO_CTRL, BOARD_LED0_GPIO_INDEX,
+                  BOARD_LED0_GPIO_PIN);
+  gpio_toggle_pin(BOARD_LED1_GPIO_CTRL, BOARD_LED1_GPIO_INDEX,
+                  BOARD_LED1_GPIO_PIN);
 }
 
 void board_init_uart(UART_Type *ptr) {
@@ -327,18 +318,6 @@ void board_ungate_mchtmr_at_lp_mode(void) {
                          cpu_lp_mode_ungate_cpu_clock);
 }
 
-uint32_t board_init_spi_clock(SPI_Type *ptr) {
-  if (ptr == HPM_SPI1) {
-    clock_add_to_group(clock_spi1, 0);
-    return clock_get_frequency(clock_spi1);
-  }
-  return 0;
-}
-
-void board_init_spi_pins(SPI_Type *ptr) {
-  (void)ptr;
-  init_spi1_pins();
-}
 
 
 uint8_t board_get_led_gpio_off_level(void) { return BOARD_LED_OFF_LEVEL; }
@@ -367,12 +346,6 @@ void init_uart_pins(UART_Type *ptr)
     }
 }
 
-void init_spi_pins(SPI_Type *ptr)
-{
-    if (ptr == HPM_SPI1) {
-        init_spi1_pins();
-    }
-}
 
 void init_usb_pins(USB_Type *ptr)
 {
@@ -388,14 +361,8 @@ void init_usb_pins(USB_Type *ptr)
 
 void init_can_pins(MCAN_Type *ptr)
 {
-    if (ptr == HPM_MCAN0) {
-        init_mcan0_pins();
-    } else if (ptr == HPM_MCAN1) {
-        init_mcan1_pins();
-    } else if (ptr == HPM_MCAN2) {
+    if (ptr == HPM_MCAN2) {
         init_mcan2_pins();
-    } else if (ptr == HPM_MCAN3) {
-        init_mcan3_pins();
     } else {
         /* Invalid CAN instance */
     }
@@ -404,4 +371,5 @@ void init_can_pins(MCAN_Type *ptr)
 void init_led_pins(void)
 {
     init_led0_pins();
+    init_led1_pins();
 }
