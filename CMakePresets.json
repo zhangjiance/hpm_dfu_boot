@@ -45,13 +45,13 @@
             "binaryDir": "${sourceDir}/build/hpm5300evklite-release"
         },
         {
-            "name": "hpm5321_usb2can-release",
-            "displayName": "HPM5321 USB2CAN (Release)",
+            "name": "hscant-lite-release",
+            "displayName": "HSCanT-Lite (Release)",
             "inherits": "base",
             "cacheVariables": {
-                "BOARD": "hpm5321_usb2can"
+                "BOARD": "hscant-lite"
             },
-            "binaryDir": "${sourceDir}/build/hpm5321_usb2can-release"
+            "binaryDir": "${sourceDir}/build/hscant-lite-release"
         },
         {
             "name": "hscant-release",
@@ -198,13 +198,13 @@
             "binaryDir": "${sourceDir}/build/hpm5300evklite-debug"
         },
         {
-            "name": "hpm5321_usb2can-debug",
-            "displayName": "HPM5321 USB2CAN (Debug)",
+            "name": "hscant-lite-debug",
+            "displayName": "HSCanT-Lite (Debug)",
             "inherits": "base-debug",
             "cacheVariables": {
-                "BOARD": "hpm5321_usb2can"
+                "BOARD": "hscant-lite"
             },
-            "binaryDir": "${sourceDir}/build/hpm5321_usb2can-debug"
+            "binaryDir": "${sourceDir}/build/hscant-lite-debug"
         },
         {
             "name": "hscant-debug",
@@ -345,8 +345,8 @@
             "jobs": 8
         },
         {
-            "name": "hpm5321_usb2can-release",
-            "configurePreset": "hpm5321_usb2can-release",
+            "name": "hscant-lite-release",
+            "configurePreset": "hscant-lite-release",
             "jobs": 8
         },
         {
@@ -430,8 +430,8 @@
             "jobs": 8
         },
         {
-            "name": "hpm5321_usb2can-debug",
-            "configurePreset": "hpm5321_usb2can-debug",
+            "name": "hscant-lite-debug",
+            "configurePreset": "hscant-lite-debug",
             "jobs": 8
         },
         {

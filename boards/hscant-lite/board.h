@@ -18,7 +18,7 @@
 #include "hpm_debug_console.h"
 #endif
 
-#define BOARD_NAME          "hpm5321_usb2can"
+#define BOARD_NAME          "hscant-lite"
 #define BOARD_UF2_SIGNATURE (0x0A4D5048UL)
 #define BOARD_DFU_SIGNATURE (0x48504D21UL)
 

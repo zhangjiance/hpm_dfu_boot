@@ -98,7 +98,7 @@ ninja -C build/hpm5301evklite-release -j8
 | Board | Release preset | Debug preset |
 | --- | --- | --- |
 | HPM5300EVK | `hpm5300evk-release` | `hpm5300evk-debug` |
-| HPM5321 USB2CAN | `hpm5321_usb2can-release` | `hpm5321_usb2can-debug` |
+| HSCanT-Lite | `hscant-lite-release` | `hscant-lite-debug` |
 | HSCanT | `hscant-release` | `hscant-debug` |
 | HPM5301EVKLite | `hpm5301evklite-release` | `hpm5301evklite-debug` |
 | HPM5E00EVK | `hpm5e00evk-release` | `hpm5e00evk-debug` |
