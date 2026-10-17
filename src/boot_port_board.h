@@ -55,9 +55,10 @@ bool boot_port_board_read_bootpin(void);
 // ============================================================================
 
 /**
- * @brief Toggle the status LED for visual feedback
- * 
- * Call this from erase/write operations to indicate activity.
+ * @brief Advance/toggle the board's status LED for visual feedback
+ *
+ * On boards with several LEDs (hscant-lite) every call moves the light to the
+ * next LED, producing a one-LED-at-a-time chase.
  */
 void boot_port_board_led_toggle(void);
 

@@ -7,6 +7,7 @@
 
 #ifndef _HPM_BOARD_H
 #define _HPM_BOARD_H
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include "hpm_common.h"
@@ -21,6 +22,8 @@
 #define BOARD_NAME          "hscant-lite"
 #define BOARD_UF2_SIGNATURE (0x0A4D5048UL)
 #define BOARD_DFU_SIGNATURE (0x48504D21UL)
+
+#define BOARD_BGPR HPM_BGPR0
 
 /* ACMP desction */
 #define BOARD_ACMP             HPM_ACMP
@@ -129,13 +132,23 @@
 #define BOARD_GPTMR_PWM_SYNC_CHANNEL  1
 #define BOARD_GPTMR_PWM_SYNC_CLK_NAME clock_gptmr0
 
-/* User LED */
-#define BOARD_LED_GPIO_CTRL  HPM_FGPIO
-#define BOARD_LED_GPIO_INDEX GPIO_DI_GPIOA
-#define BOARD_LED_GPIO_PIN   26
+#define BOARD_HAS_SYS_LED 0
+#define BOARD_HAS_WS2812  0
 
+#define BOARD_HAS_CHAN_LEDS  1
+#define BOARD_CHAN_LED_COUNT 4
+#define BOARD_ACTIVITY_LED_COUNT (2 * BOARD_CHAN_LED_COUNT)
+
+/* Logical on/off sentinels for board_led_write(); the real per-LED level is
+ * stored in board.c because the two LED groups have opposite polarity. */
 #define BOARD_LED_OFF_LEVEL 1
 #define BOARD_LED_ON_LEVEL  0
+
+/* CAN/USB wiring (also consumed by candleLight's port/board_contract.h). */
+#define BOARD_CAN_COUNT     4
+#define BOARD_CAN_INSTANCES HPM_MCAN0, HPM_MCAN1, HPM_MCAN2, HPM_MCAN3
+#define BOARD_USB_BASE      HPM_USB0
+#define BOARD_USB_IRQn      IRQn_USB0
 
 /* 12V Power Enable for lin transceiver */
 #define BOARD_SUPPORT_LIN_TRANSCEIVER_CONTROL 1
@@ -152,11 +165,11 @@
 #define BOARD_APP_GPIOM_USING_CTRL_NAME gpiom_core0_fast
 
 /* User button */
-#define BOARD_APP_GPIO_CTRL  HPM_GPIO0
-#define BOARD_APP_GPIO_INDEX GPIO_DI_GPIOA
-#define BOARD_APP_GPIO_PIN   3
-#define BOARD_APP_GPIO_IRQ   IRQn_GPIO0_A
-#define BOARD_BUTTON_PRESSED_VALUE 1
+#define BOARD_APP_GPIO_CTRL         HPM_GPIO0
+#define BOARD_APP_GPIO_INDEX        GPIO_DI_GPIOA
+#define BOARD_APP_GPIO_PIN          3
+#define BOARD_APP_GPIO_IRQ          IRQn_GPIO0_A
+#define BOARD_BUTTON_PRESSED_VALUE  1
 
 /* spi section */
 #define BOARD_APP_SPI_BASE              HPM_SPI1
@@ -203,23 +216,7 @@
 #define BOARD_APP_SDCARD_SDXC_BASE   (HPM_SDXC0)
 #define BOARD_APP_SDCARD_SUPPORT_1V8 (0)
 
-/* MCAN section */
-#define BOARD_APP_CAN_BASE HPM_MCAN1
-#define BOARD_APP_CAN_IRQn IRQn_MCAN1
-
-/* CAN channel configuration for PCAN protocol */
-#define BOARD_CAN_CHANNEL_COUNT 1  /* Single CAN channel */
-#define BOARD_CAN1_ENABLED 1       /* CAN1 is enabled */
-#undef  BOARD_CAN2_ENABLED         /* CAN2 is not available on this board */
-
-/* CAN controller mapping for each channel */
-#define BOARD_CAN1_BASE HPM_MCAN1  /* CAN channel 1 uses MCAN1 */
-#define BOARD_CAN1_IRQn IRQn_MCAN1
-/* For dual CAN boards, define BOARD_CAN2_BASE and BOARD_CAN2_IRQn here */
-/* Example:
- * #define BOARD_CAN2_BASE HPM_MCAN3
- * #define BOARD_CAN2_IRQn IRQn_MCAN3
- */
+/* MCAN section: all four controllers are wired. */
 
 /* CALLBACK TIMER section */
 #define BOARD_CALLBACK_TIMER          (HPM_GPTMR3)
@@ -482,6 +479,7 @@ void board_init_usb(USB_Type *ptr);
 void board_init_pmp(void);
 void board_led_write(uint8_t state);
 void board_led_toggle(void);
+void board_chan_led_set(uint8_t channel, bool error, bool on);
 void board_init_uart(UART_Type *ptr);
 void board_init_can(MCAN_Type *ptr);
 uint32_t board_init_can_clock(MCAN_Type *ptr);
