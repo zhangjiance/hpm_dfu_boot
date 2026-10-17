@@ -38,8 +38,10 @@ project(hpm_dfu_boot)
 # Use nano libc (saves ~31KB)
 sdk_ld_options("--specs=nano.specs")
 
-# Bootloader: 128K flash using SDK's flash_xip.ld
-sdk_linker_global_symbols("_flash_size=128K" "_noncacheable_size=256K")
+# Bootloader: 128K flash using SDK's flash_xip.ld.  Leave _noncacheable_size to
+# the SoC CMakeLists in hpm_sdk: forcing 256K overflows boards with less AXI
+# SRAM (HPM5E00EVK has 256 KiB total).
+sdk_linker_global_symbols("_flash_size=128K")
 
 # Include CherryUSB DFU class
 sdk_inc($ENV{HPM_SDK_BASE}/middleware/cherryusb/class/dfu)
