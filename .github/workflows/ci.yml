@@ -136,3 +136,75 @@ jobs:
             build/${{ matrix.preset }}/output/*.bin
             build/${{ matrix.preset }}/output/*.hex
             build/${{ matrix.preset }}/output/*.map
+
+  release:
+    name: publish ${{ github.ref_name }}
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # gh release create
+    steps:
+      - name: Download the images
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Collect the release files
+        run: |
+          set -euo pipefail
+          # One .bin and .hex per board, named after the board (the build
+          # itself uses the same file name for every preset).
+          for dir in artifacts/*/; do
+            preset=$(basename "${dir}")
+            board=${preset%-release}
+            bin=$(find "${dir}" -maxdepth 1 -name 'hpm-dfu-boot.bin' -print -quit)
+            hex=$(find "${dir}" -maxdepth 1 -name 'hpm-dfu-boot.hex' -print -quit)
+            test -n "${bin}"
+            test -n "${hex}"
+            cp "${bin}" "hpm-dfu-boot-${board}.bin"
+            cp "${hex}" "hpm-dfu-boot-${board}.hex"
+          done
+          sha256sum hpm-dfu-boot-*.bin hpm-dfu-boot-*.hex > sha256sums.txt
+          cat sha256sums.txt
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          pre=""
+          case "${TAG}" in
+            *-rc*|*-beta*|*-alpha*) pre="--prerelease" ;;
+          esac
+          files=(hpm-dfu-boot-*.bin hpm-dfu-boot-*.hex sha256sums.txt)
+
+          # GitHub answers 5xx and timeouts from time to time; retry those
+          # instead of failing a release that is otherwise fine.
+          retry() {
+            local attempt=1
+            until "$@"; do
+              if [ "${attempt}" -ge 3 ]; then
+                echo "::error::$1 failed ${attempt} times"
+                return 1
+              fi
+              sleep $((attempt * 10))
+              attempt=$((attempt + 1))
+            done
+          }
+
+          # Idempotent on purpose: re-pushing the same tag must update assets.
+          if gh release view "${TAG}" > /dev/null 2>&1; then
+            echo "release ${TAG} already exists, making sure the assets are there"
+            retry gh release upload "${TAG}" "${files[@]}" --clobber
+          else
+            retry gh release create "${TAG}" \
+              --title "${TAG}" \
+              --generate-notes ${pre} \
+              "${files[@]}"
+          fi
+
+          retry gh release view "${TAG}" \
+            --json tagName,isPrerelease,assets \
+            --jq '"\(.tagName) prerelease=\(.isPrerelease) assets=\([.assets[].name] | join(", "))"'
