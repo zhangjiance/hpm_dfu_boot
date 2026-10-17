@@ -145,6 +145,9 @@ jobs:
     permissions:
       contents: write # gh release create
     steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
       - name: Download the images
         uses: actions/download-artifact@v4
         with:
@@ -153,19 +156,13 @@ jobs:
       - name: Collect the release files
         run: |
           set -euo pipefail
-          # One .bin and .hex per board, named after the board (the build
-          # itself uses the same file name for every preset).
+          # Only the flashable .bin is published.
           for dir in artifacts/*/; do
-            preset=$(basename "${dir}")
-            board=${preset%-release}
-            bin=$(find "${dir}" -maxdepth 1 -name 'hpm-dfu-boot.bin' -print -quit)
-            hex=$(find "${dir}" -maxdepth 1 -name 'hpm-dfu-boot.hex' -print -quit)
+            bin=$(find "${dir}" -maxdepth 1 -name 'hpm-dfu-boot-*.bin' -print -quit)
             test -n "${bin}"
-            test -n "${hex}"
-            cp "${bin}" "hpm-dfu-boot-${board}.bin"
-            cp "${hex}" "hpm-dfu-boot-${board}.hex"
+            cp "${bin}" .
           done
-          sha256sum hpm-dfu-boot-*.bin hpm-dfu-boot-*.hex > sha256sums.txt
+          sha256sum hpm-dfu-boot-*.bin > sha256sums.txt
           cat sha256sums.txt
 
       - name: Create the release
@@ -178,7 +175,7 @@ jobs:
           case "${TAG}" in
             *-rc*|*-beta*|*-alpha*) pre="--prerelease" ;;
           esac
-          files=(hpm-dfu-boot-*.bin hpm-dfu-boot-*.hex sha256sums.txt)
+          files=(hpm-dfu-boot-*.bin sha256sums.txt)
 
           # GitHub answers 5xx and timeouts from time to time; retry those
           # instead of failing a release that is otherwise fine.
@@ -197,6 +194,15 @@ jobs:
           # Idempotent on purpose: re-pushing the same tag must update assets.
           if gh release view "${TAG}" > /dev/null 2>&1; then
             echo "release ${TAG} already exists, making sure the assets are there"
+            expected=" ${files[*]} "
+            gh release view "${TAG}" --json assets --jq '.assets[].name' |
+              while read -r name; do
+                case "${name}" in hpm-dfu-boot-*) ;; *) continue ;; esac
+                case "${expected}" in
+                  *" ${name} "*) ;;
+                  *) retry gh release delete-asset "${TAG}" "${name}" -y ;;
+                esac
+              done
             retry gh release upload "${TAG}" "${files[@]}" --clobber
           else
             retry gh release create "${TAG}" \
@@ -204,6 +210,9 @@ jobs:
               --generate-notes ${pre} \
               "${files[@]}"
           fi
+
+          # A tag deleted/recreated by hand can leave a draft release; publish it.
+          retry gh release edit "${TAG}" --draft=false
 
           retry gh release view "${TAG}" \
             --json tagName,isPrerelease,assets \

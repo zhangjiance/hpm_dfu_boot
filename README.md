@@ -69,12 +69,12 @@ cmake --preset hpm5301evklite-release
 cmake --build --preset hpm5301evklite-release
 ```
 
-Artifacts are located at `build/<preset>/output/hpm-dfu-boot.elf` and `hpm-dfu-boot.hex`.
+Artifacts are located at `build/<preset>/output/hpm-dfu-boot-<board>.elf` and `hpm-dfu-boot-<board>.hex`.
 
 ---
 
 ## Typical Usage
 
-1. **First flash**: Write `hpm-dfu-boot.hex` to the start of Flash using a debugger / flasher.
+1. **First flash**: Write `hpm-dfu-boot-<board>.hex` to the start of Flash using a debugger / flasher.
 2. **Subsequent upgrades**: Hold the boot pin at power-on (or have the APP call `hpm_reboot_to_boot()`) to enter DFU mode, then download new APP firmware with a DFU tool.
 3. **APP launch**: If a valid signed APP exists in Flash and no DFU trigger is set, the bootloader automatically jumps to it.

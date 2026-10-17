@@ -123,8 +123,8 @@ ninja -C build/hpm5301evklite-release -j8
 构建完成后，输出位于：
 
 ```
-build/<preset>/output/hpm-dfu-boot.elf
-build/<preset>/output/hpm-dfu-boot.hex
+build/<preset>/output/hpm-dfu-boot-<board>.elf
+build/<preset>/output/hpm-dfu-boot-<board>.hex
 ```
 
 - `.elf`：可执行镜像，可用于调试 / OpenOCD 烧录；

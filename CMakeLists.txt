@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-set(APP_NAME hpm-dfu-boot)
-
 # RISC-V architecture
 set(RV_ARCH "rv32imac_zicsr_zifencei")
 set(RV_ABI "ilp32")
@@ -25,6 +23,12 @@ if(NOT DEFINED BOARD)
         "  cmake -DBOARD=<board> ...\n"
     )
 endif()
+
+# Artifact names carry the board so images from different presets/releases can
+# never be confused: hpm-dfu-boot-<BOARD>.elf/.bin/.hex/.map.
+# APP_NAME feeds the SDK's APP_ELF_NAME etc., so this has to be set before
+# find_package(hpm-sdk).
+set(APP_NAME "hpm-dfu-boot-${BOARD}")
 
 # --- Board search paths ---
 if(NOT DEFINED BOARD_SEARCH_PATH AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/boards)

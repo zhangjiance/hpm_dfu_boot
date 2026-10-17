@@ -123,8 +123,8 @@ ninja -C build/hpm5301evklite-release -j8
 After a successful build, the output is located at:
 
 ```
-build/<preset>/output/hpm-dfu-boot.elf
-build/<preset>/output/hpm-dfu-boot.hex
+build/<preset>/output/hpm-dfu-boot-<board>.elf
+build/<preset>/output/hpm-dfu-boot-<board>.hex
 ```
 
 - `.elf`: executable image, for debugging / OpenOCD flashing;

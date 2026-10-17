@@ -69,12 +69,12 @@ cmake --preset hpm5301evklite-release
 cmake --build --preset hpm5301evklite-release
 ```
 
-产物位于 `build/<preset>/output/hpm-dfu-boot.elf` 与 `hpm-dfu-boot.hex`。
+产物位于 `build/<preset>/output/hpm-dfu-boot-<board>.elf` 与 `hpm-dfu-boot-<board>.hex`。
 
 ---
 
 ## 典型使用场景
 
-1. 首次烧录：通过调试器 / 烧录器将 `hpm-dfu-boot.hex` 写入 Flash 起始位置。
+1. 首次烧录：通过调试器 / 烧录器将 `hpm-dfu-boot-<board>.hex` 写入 Flash 起始位置。
 2. 后续升级：设备上电时按住 Boot 引脚（或 APP 调用 `hpm_reboot_to_boot()`），进入 DFU 模式后用 DFU 工具下载新的 APP 固件。
 3. APP 启动：若 Flash 中已存在带有效签名的 APP 且未触发 DFU，bootloader 会自动跳转执行。
