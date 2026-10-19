@@ -16,6 +16,8 @@
 
 #include "pinmux.h"
 #include "board.h"
+#include "hpm_gpio_drv.h"
+#include "hpm_gpiom_drv.h"
 
 
 void init_uart0_pins(void)
@@ -335,8 +337,9 @@ void init_pwm_pin_as_sdm_clock(void)
 void init_gpio_pins(void)
 {
     /* Button */
-    HPM_IOC->PAD[IOC_PAD_PC23].FUNC_CTL = IOC_PC23_FUNC_CTL_GPIO_C_23;
-    HPM_IOC->PAD[IOC_PAD_PC23].PAD_CTL = IOC_PAD_PAD_CTL_OD_SET(1) | IOC_PAD_PAD_CTL_HYS_SET(1);
+    HPM_IOC->PAD[IOC_PAD_PA02].FUNC_CTL = IOC_PA02_FUNC_CTL_GPIO_A_02;
+    gpiom_set_pin_controller(HPM_GPIOM, GPIOM_ASSIGN_GPIOA, 2, gpiom_core0_fast);
+    gpio_set_pin_input(HPM_FGPIO, GPIO_OE_GPIOA, 2);
 }
 
 /*
