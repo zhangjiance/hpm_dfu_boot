@@ -30,14 +30,18 @@
  * ------------------------------------------------------------------ */
 #define BOARD_CAN_COUNT     4
 #define BOARD_CAN_INSTANCES HPM_MCAN0, HPM_MCAN1, HPM_MCAN2, HPM_MCAN3
-#define BOARD_CAN_CLOCKS    clock_can0, clock_can1, clock_can2, clock_can3
 #define BOARD_USB_BASE      HPM_USB0
 #define BOARD_USB_IRQn      IRQn_USB0
 #define BOARD_HAS_SYS_LED   1 /* GPIOB[10], active high */
 
-/* clock.c already sets clk_can0..3 to clk_src_pll1_clk0 / 10 and adds them to
- * group 0, so the port layer's generic board_init_can_clock() default applies
- * (no board specific clock code needed). */
+/* WS2812 status LEDs: 8 LEDs driven over SPI1 (0xF0074000) with the data line
+ * on PA29 (SPI1_MOSI), exactly like the closed-source application.  The SPI
+ * instance/clock come from BOARD_APP_SPI_BASE / BOARD_APP_SPI_CLK_NAME below. */
+#define BOARD_HAS_WS2812        1
+#define BOARD_WS2812_LED_COUNT  8
+
+/* board_init_can_clock() (board.c) sources clk_can0..3 from clk_src_pll1_clk0,
+ * so board_init_clock() keeps PLL1CLK0 at 800 MHz => 80 MHz CAN clock. */
 
 /* dma section */
 #define BOARD_APP_HDMA HPM_HDMA
@@ -191,6 +195,7 @@ uint8_t board_get_led_gpio_off_level(void);
 void board_init_pmp(void);
 
 uint32_t board_init_uart_clock(UART_Type *ptr);
+uint32_t board_init_can_clock(MCAN_Type *ptr);
 
 void board_init_gptmr_channel_pin(GPTMR_Type *ptr, uint32_t channel,
                                   bool as_comp);
