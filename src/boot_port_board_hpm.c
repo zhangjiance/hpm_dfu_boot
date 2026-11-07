@@ -49,7 +49,13 @@ void boot_port_board_init(void)
     }
 #endif
 
-    /* Initialize USB controller */
+}
+
+/* Only used when the bootloader actually stays in DFU mode.  board_init_usb()
+ * waits ~100 ms for the VBUS rail (see the board layer), which must not be paid
+ * on the normal "jump to application" path. */
+void boot_port_board_init_usb(void)
+{
     board_init_usb((USB_Type *)CONFIG_HPM_USBD_BASE);
     intc_set_irq_priority(CONFIG_HPM_USBD_IRQn, 2);
 }

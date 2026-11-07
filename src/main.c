@@ -22,6 +22,10 @@ int main(void)
 
     BOOT_PRINTF("[BOOT] Entering DFU mode...\r\n");
 
+    /* Not needed to jump to the application, so it is done only here: it costs
+     * ~100 ms (USB_PWR / VBUS settle) and every millisecond delays the APP. */
+    boot_port_board_init_usb();
+
     extern void dfu_boot_init(uint8_t busid, uintptr_t reg_base);
     dfu_boot_init(0, (uintptr_t)HPM_USB0_BASE);
 

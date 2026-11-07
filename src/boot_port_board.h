@@ -32,6 +32,15 @@ extern "C" {
 void boot_port_board_init(void);
 
 /**
+ * @brief Initialize the USB controller (only needed in DFU mode)
+ *
+ * Kept out of boot_port_board_init() on purpose: the normal boot path jumps
+ * straight to the application, and this costs ~100 ms waiting for the USB_PWR
+ * controlled VBUS rail to settle.
+ */
+void boot_port_board_init_usb(void);
+
+/**
  * @brief Deinitialize peripherals before jumping to application
  * 
  * This function cleanly shuts down peripherals to ensure clean
