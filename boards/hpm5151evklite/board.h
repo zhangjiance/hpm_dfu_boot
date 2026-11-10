@@ -166,12 +166,13 @@
 #define BOARD_APP_GPIOM_USING_CTRL      HPM_FGPIO
 #define BOARD_APP_GPIOM_USING_CTRL_NAME gpiom_core0_fast
 
-/* User button: BOOT0 on PB05, pulled up and shorted to GND when pressed */
+/* User button: BOOT0 on PA02, pulled down (R5 10K) and switched to 3V3 when
+ * pressed - active high, like the HSCanT board */
 #define BOARD_APP_GPIO_CTRL  HPM_GPIO0
-#define BOARD_APP_GPIO_INDEX GPIO_DI_GPIOB
-#define BOARD_APP_GPIO_PIN   5
-#define BOARD_APP_GPIO_IRQ   IRQn_GPIO0_B
-#define BOARD_BUTTON_PRESSED_VALUE 0
+#define BOARD_APP_GPIO_INDEX GPIO_DI_GPIOA
+#define BOARD_APP_GPIO_PIN   2
+#define BOARD_APP_GPIO_IRQ   IRQn_GPIO0_A
+#define BOARD_BUTTON_PRESSED_VALUE 1
 
 /* spi section */
 #define BOARD_APP_SPI_BASE              HPM_SPI3
