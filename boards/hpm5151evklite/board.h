@@ -76,12 +76,14 @@
 
 #if BOARD_CONSOLE_TYPE == CONSOLE_TYPE_UART
 #ifndef BOARD_CONSOLE_UART_BASE
-/* EVK-LITE routes UART2 to PB08(TXD)/PB09(RXD) on the 40-pin header */
-#define BOARD_CONSOLE_UART_BASE       HPM_UART2
-#define BOARD_CONSOLE_UART_CLK_NAME   clock_uart2
-#define BOARD_CONSOLE_UART_IRQ        IRQn_UART2
-#define BOARD_CONSOLE_UART_TX_DMA_REQ HPM_DMA_SRC_UART2_TX
-#define BOARD_CONSOLE_UART_RX_DMA_REQ HPM_DMA_SRC_UART2_RX
+/* UART0 (PA00 TXD / PA01 RXD) is the one wired to the onboard L103 probe, so
+ * printf() lands on the BMP's target UART (its second CDC).  UART2
+ * (PB00/PB01) only goes to the 40-pin header. */
+#define BOARD_CONSOLE_UART_BASE       HPM_UART0
+#define BOARD_CONSOLE_UART_CLK_NAME   clock_uart0
+#define BOARD_CONSOLE_UART_IRQ        IRQn_UART0
+#define BOARD_CONSOLE_UART_TX_DMA_REQ HPM_DMA_SRC_UART0_TX
+#define BOARD_CONSOLE_UART_RX_DMA_REQ HPM_DMA_SRC_UART0_RX
 #endif
 #define BOARD_CONSOLE_UART_BAUDRATE (115200UL)
 #endif

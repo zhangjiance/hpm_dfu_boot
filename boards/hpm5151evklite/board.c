@@ -94,7 +94,9 @@ void board_init_console(void)
      */
     init_uart_pins((UART_Type *) BOARD_CONSOLE_UART_BASE);
 
-    init_uart2_clock();
+    /* Enable the clock of whichever UART the console actually sits on; the
+     * template hardcoded UART2, which leaves a UART0 console unclocked. */
+    board_init_uart_clock((UART_Type *) BOARD_CONSOLE_UART_BASE);
 
     cfg.type = BOARD_CONSOLE_TYPE;
     cfg.base = (uint32_t)BOARD_CONSOLE_UART_BASE;
