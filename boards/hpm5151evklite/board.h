@@ -22,6 +22,16 @@
 #define BOARD_UF2_SIGNATURE (0x0A4D5048UL)
 #define BOARD_DFU_SIGNATURE (0x48504D21UL)
 
+/* ------------------------------------------------------------------
+ * Interface required by the candleLight port layer (port/board_contract.h)
+ * ------------------------------------------------------------------ */
+#define BOARD_CAN_COUNT     1
+#define BOARD_CAN_INSTANCES HPM_MCAN0
+#define BOARD_CAN_CLOCKS    clock_can0
+#define BOARD_USB_BASE      HPM_USB0
+#define BOARD_USB_IRQn      IRQn_USB0
+#define BOARD_HAS_SYS_LED   1
+
 /* ACMP desction */
 #define BOARD_ACMP             HPM_ACMP0
 #define BOARD_ACMP_CLK         clock_acmp0

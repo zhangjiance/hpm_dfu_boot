@@ -30,10 +30,12 @@ void init_uart0_pins(void)
 
 void init_uart2_pins(void)
 {
-    /* HPM5151-EVK-LITE: UART2 on PB08(TXD)/PB09(RXD), routed to J1 header */
-    HPM_IOC->PAD[IOC_PAD_PB09].FUNC_CTL = IOC_PB09_FUNC_CTL_UART2_RXD;
+    /* HPM5151-EVK-LITE: UART2 on PB00(TXD)/PB01(RXD), routed to J1 header.
+     * These pins are shared with the D8C/D8A LED cathodes.  PB09 does not
+     * exist on the HPM5151IN6 package. */
+    HPM_IOC->PAD[IOC_PAD_PB01].FUNC_CTL = IOC_PB01_FUNC_CTL_UART2_RXD;
 
-    HPM_IOC->PAD[IOC_PAD_PB08].FUNC_CTL = IOC_PB08_FUNC_CTL_UART2_TXD;
+    HPM_IOC->PAD[IOC_PAD_PB00].FUNC_CTL = IOC_PB00_FUNC_CTL_UART2_TXD;
 }
 
 void init_uart3_pins(void)
@@ -65,13 +67,13 @@ void init_i2c0_pins(void)
 
 void init_i2c1_pins(void)
 {
-    HPM_IOC->PAD[IOC_PAD_PY03].FUNC_CTL = IOC_PY03_FUNC_CTL_I2C1_SCL | IOC_PAD_FUNC_CTL_LOOP_BACK_MASK;
-    HPM_PIOC->PAD[IOC_PAD_PY03].FUNC_CTL = PIOC_PY03_FUNC_CTL_SOC_GPIO_Y_03;
-    HPM_IOC->PAD[IOC_PAD_PY03].PAD_CTL = IOC_PAD_PAD_CTL_PE_SET(1) | IOC_PAD_PAD_CTL_PS_SET(1) | IOC_PAD_PAD_CTL_OD_SET(1);
+    /* HPM5151-EVK-LITE: I2C1 on PB02(SCL)/PB03(SDA), routed to J1 header.
+     * The PY02/PY03 pads are not bonded on the HPM5151IN6 package. */
+    HPM_IOC->PAD[IOC_PAD_PB02].FUNC_CTL = IOC_PB02_FUNC_CTL_I2C1_SCL | IOC_PAD_FUNC_CTL_LOOP_BACK_MASK;
+    HPM_IOC->PAD[IOC_PAD_PB02].PAD_CTL = IOC_PAD_PAD_CTL_PE_SET(1) | IOC_PAD_PAD_CTL_PS_SET(1) | IOC_PAD_PAD_CTL_OD_SET(1);
 
-    HPM_IOC->PAD[IOC_PAD_PY02].FUNC_CTL = IOC_PY02_FUNC_CTL_I2C1_SDA;
-    HPM_PIOC->PAD[IOC_PAD_PY02].FUNC_CTL = PIOC_PY02_FUNC_CTL_SOC_GPIO_Y_02;
-    HPM_IOC->PAD[IOC_PAD_PY02].PAD_CTL = IOC_PAD_PAD_CTL_PE_SET(1) | IOC_PAD_PAD_CTL_PS_SET(1) | IOC_PAD_PAD_CTL_OD_SET(1);
+    HPM_IOC->PAD[IOC_PAD_PB03].FUNC_CTL = IOC_PB03_FUNC_CTL_I2C1_SDA;
+    HPM_IOC->PAD[IOC_PAD_PB03].PAD_CTL = IOC_PAD_PAD_CTL_PE_SET(1) | IOC_PAD_PAD_CTL_PS_SET(1) | IOC_PAD_PAD_CTL_OD_SET(1);
 }
 
 void init_i2c2_pins(void)
@@ -222,18 +224,18 @@ void init_adc_qeiv2_pins(void)
 
 void init_usb0_pins(void)
 {
-    HPM_IOC->PAD[IOC_PAD_PB13].FUNC_CTL = IOC_PB13_FUNC_CTL_USB0_ID;
-
-    HPM_IOC->PAD[IOC_PAD_PB15].FUNC_CTL = IOC_PB15_FUNC_CTL_USB0_OC;
-
-    HPM_IOC->PAD[IOC_PAD_PB14].FUNC_CTL = IOC_PB14_FUNC_CTL_USB0_PWR;
+    /* HPM5151-EVK-LITE: USB0_DM/USB0_DP are the dedicated PB20/PB21 pads on
+     * the HPM5151IN6 package (no IOC muxing).  The Type-C port is device-only,
+     * so no USB0_ID/OC/PWR pins are wired. */
 }
 
 void init_mcan0_pins(void)
 {
-    HPM_IOC->PAD[IOC_PAD_PA20].FUNC_CTL = IOC_PA20_FUNC_CTL_MCAN0_RXD;
+    /* HPM5151-EVK-LITE: CAN0 on PB04(RXD)/PB05(TXD), wired to the SIT1042
+     * transceiver.  PA19/PA20 are not bonded on the HPM5151IN6 package. */
+    HPM_IOC->PAD[IOC_PAD_PB04].FUNC_CTL = IOC_PB04_FUNC_CTL_MCAN0_RXD;
 
-    HPM_IOC->PAD[IOC_PAD_PA19].FUNC_CTL = IOC_PA19_FUNC_CTL_MCAN0_TXD;
+    HPM_IOC->PAD[IOC_PAD_PB05].FUNC_CTL = IOC_PB05_FUNC_CTL_MCAN0_TXD;
 }
 
 void init_led_pins_as_gpio(void)
@@ -307,12 +309,9 @@ void init_trgm_gptmr0_cap2_invert_pins(void)
 
 void init_spi_nor_flash_pins(void)
 {
-    HPM_IOC->PAD[IOC_PAD_PA14].FUNC_CTL = IOC_PA14_FUNC_CTL_SPI0_DAT2;
-    HPM_IOC->PAD[IOC_PAD_PA14].PAD_CTL = IOC_PAD_PAD_CTL_DS_SET(7) | IOC_PAD_PAD_CTL_SR_SET(1) | IOC_PAD_PAD_CTL_SPD_SET(3);
-
-    HPM_IOC->PAD[IOC_PAD_PA09].FUNC_CTL = IOC_PA09_FUNC_CTL_SPI0_DAT3;
-    HPM_IOC->PAD[IOC_PAD_PA09].PAD_CTL = IOC_PAD_PAD_CTL_DS_SET(7) | IOC_PAD_PAD_CTL_SR_SET(1) | IOC_PAD_PAD_CTL_SPD_SET(3);
-
+    /* HPM5151-EVK-LITE: external W25Q16 on SPI0.  WP#/HOLD# are tied high on
+     * the board, so only the single-SPI signals are routed here (PA14 is not
+     * bonded and PA09 is used by the J1 header). */
     HPM_IOC->PAD[IOC_PAD_PA12].FUNC_CTL = IOC_PA12_FUNC_CTL_SPI0_MISO;
     HPM_IOC->PAD[IOC_PAD_PA12].PAD_CTL = IOC_PAD_PAD_CTL_DS_SET(7) | IOC_PAD_PAD_CTL_SR_SET(1) | IOC_PAD_PAD_CTL_SPD_SET(3);
 

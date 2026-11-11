@@ -151,7 +151,9 @@ void board_init(void)
     board_init_usb_dp_dm_pins();
 
     board_init_clock();
+    board_init_led_pins();
     board_init_console();
+    board_init_gpio_pins();
     board_init_pmp();
 #if BOARD_SHOW_CLOCK
     board_print_clock_freq();
